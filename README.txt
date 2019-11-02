@@ -1,7 +1,7 @@
 SIMULAZIONE DI UN SISTEMA A CODA M/M/Y/Y
 Progetto di un Sistema a Coda M/M/Y/Y per il corso di Reti di Telecomunicazioni tenuto dal professor Andrea Conti, Corso di Laurea Triennale in Informatica, A.A. 2019 - 2020
 
-Mebri del gruppo: Martina Tenani, ALberto Paparella
+Mebri del gruppo: Martina Tenani, Alberto Paparella
 
 
 Il progetto e' stato sviluppato in piu' files per migliorarne la leggibilita', sia in fase di lavoro e di debugging che per la lettura di terzi, nonche' per assicurarne un miglior riutilizzo.
