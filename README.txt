@@ -11,9 +11,6 @@ Un miglioramento potrebbe essere tener conto dell'indirizzo dell'ultimo elemento
 
 La generazione dei tempi di interarrivo e di intersevizio (numeri pseudo-casuali) sfrutta la tecnica di trasformazione inversa. Essendosi rilevato tale calcolo, dopo innumerevoli tentativi, fuori dalla nostra portata, abbiamo deciso di avvalerci dell'ausilio di internet, ricavando dalla formula di densita' di probabilita' dei processi markoviani 1 - e^(-f(t)) la seguente formula: t = -(1/lambda)*log(1-u) dove per log si intende il logaritmo naturale e per u una variabile aleatoria distribuita uniformemente fra 0 e 1. Ovviamente, per il calcolo dei tempi di interservizio basti invertire lambda con mu.
 
-La variabile aleatoria X con funzione di densità di probabilità fX(x) è stata
-calcolata adottando la tecnica di trasformazione inversa.
-
 
 //----- pacchetto.h ------------------------------
 Nel file pacchetto.h viene definita una struttura dati Pacchetto il cui unico campo non e' altro che un intero contenente l'id del pacchetto.
