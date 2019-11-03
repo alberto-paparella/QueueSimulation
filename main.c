@@ -12,7 +12,7 @@
 
 //----- MACROS --------------------------------------------------------------
 #define Y 4         // numero servitori
-#define PKTGEN 50  // pacchetti generati a ogni sperimentazione
+#define PKTGEN 250  // pacchetti generati a ogni sperimentazione
 #define SEED 5647   // Seme per la generazione di numeri pseudo-casuali
                     // e per la ripetibilita' dell'esperimento
 
@@ -58,11 +58,11 @@ int main(int argc, char* argv[]) {
         return(-1);
     }
 
-    fprintf(fp, "Andamento di E{K} in funzione di A\nA\t\tE{K}\n");
+    fprintf(fp, "Andamento di E{K} in funzione di A\nY = %d\tPacchetti Generati: %d\nA\t\tE{K}\n", Y, PKTGEN);
 
     //lambda = 0.1; // Per il DEBUG commentando il ciclo
     mu = 0.01;
-    for (lambda = 0.001; lambda < 0.2; lambda += 0.001) {
+    for (lambda = 0.0025; lambda < 0.2001; lambda += 0.0025) {
 
         sommaK = 0;
         sommaKcoda = 0;
