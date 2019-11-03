@@ -11,23 +11,24 @@
 #include "poisgen.h"
 
 //----- MACROS --------------------------------------------------------------
-#define SEED 500
 #define Y 4         // numero servitori
 #define NRIP 100    // cicli
-#define SEED 500    // Seme per la generazione di numeri pseudo-casuali
+#define SEED 5647    // Seme per la generazione di numeri pseudo-casuali
                     // e per la ripetibilita' dell'esperimento
 
 //===== Main program ========================================================
 int main(int argc, char* argv[]) {
 
     // Variabili
-    int ii, t;              // Iteratori
+    int ii;// t;              // Iteratori
+    int kGen = 1000;        // Pacchetti che verranno generati nel corso della simulazione
     int k = 0;              // Numero pacchetti nel sistema
+    int kRif = 0;           // Pacchetti rifiutati dal sistema
     int nextArrivo = 0;     // Fra quanto tempo arrivera' il prossimo pacchetto
     int sommaK = 0;         // Utile per exp
     double eK = 0.0;        // Utile per exp
-    double lambda = 0.05;   // Tasso di nascita
-    double mu = 0.025;      // Tasso di morte
+    double lambda;          // Tasso di nascita
+    double mu;              // Tasso di morte
     double lmbk, muk;       // Parametri istantanei di lambda e mu
 
     Pacchetto pkt;          // Il record di pacchetto
@@ -55,13 +56,87 @@ int main(int argc, char* argv[]) {
         return(-1);
     }
 
-    fprintf("NOME ESPERIMENTO ATTUALE\n");
+    fprintf(fp, "Andamento di E{K} in funzione di A\nA\t\tE{K}\n");
 
-    // eventuale cilcazione esterna per esperimenti al variare di parametri, come lambda
-    for (ii = 0; ii < NRIP; ii++) {
-        // esperimento
+    lambda = 0.1;
+    mu = 0.01;
+    for (lambda = 0.001; lambda < 0.2; lambda += 0.001) {
+
+        sommaK = 0;
+        kGen = 1000;
+        while (kGen) {
+
+                /* Decremento di tutti i contatori diversi da 0 */
+                if (nextArrivo > 0)
+                    nextArrivo--;
+                for (ii = 0; ii < Y; ii++) {
+                    if (servitori[ii].tServizio) {
+                        servitori[ii].tServizio--;
+                        if (servitori[ii].tServizio == 0) {
+                            servitori[ii].Occupato = 0;
+                            k--;
+                        }
+                    }
+                }
+
+                // Stampa a video l'istante attuale (utile per il DEBUG)
+                // printf("PKT nel sistema: %d\tProssimo PKT: %d\nStato Servitori:\n", k, nextArrivo);
+                // for (ii = 0; ii < Y; ii++)
+                //   printf("Servitore: %d\tSta servendo: %d\tOccupato: %d\tLibero fra: %d\nCoda:\n", ii+1, servitori[ii].pacchetto.id, servitori[ii].Occupato, servitori[ii].tServizio);
+                //stampaCoda(c1);
+
+                /* Gestione parametro lambda */
+                if (k < Y)
+                    lmbk = lambda;
+                else
+                    lmbk = 0;   // se lmbk e' uguale a 0, significa che non mi aspetto arrivi
+                                // in quanto non posso avere piu' di k pacchetti nel sistema
+
+                /* Gestione arrivi */
+                if (nextArrivo == 0 && lmbk) {
+                    kGen--;
+                    k++;
+
+                    pkt.id++;
+                    enqueue(&c1,pkt);
+                    nextArrivo = poisson(lmbk);
+
+                    // SPOILER: quanto segue per il mio Sistema avverra' SEMPRE, vale a dire la coda sara' sempre vuota
+                    // Controllo se ho un servitore disponibile, in caso affermativo faccio la dequeue
+                    // e metto il pacchetto in quel servitore generando il tempo che impieghera' ad essere servito
+                    ii = 0;
+                    while (servitori[ii].Occupato && ii < Y - 1)
+                        ii++;
+                    if (servitori[ii].Occupato == 0) {
+                        servitori[ii].pacchetto.id = c1->pacchetto.id;  // Copio l'indirizzo del pacchetto in testa alla coda
+                                                                        // nel servitore; S ora sta servendo quel pkt
+                        servitori[ii].Occupato = 1;
+                        muk = k * mu;   // Tanto mi serve solo qui
+                        servitori[ii].tServizio = poisson(muk);
+                        dequeue(&c1);    // ATTENZIONE: in realta' prima viene effettuata la dequeue e poi il pacchetto
+                                        // entra nel servitore, ovviamente. Cio' e' invertito per semplificare
+                                        // l'implementazione della simulazione
+                    }
+
+                }
+
+                // Se un pacchetto e' stato scartato, genera tempo prossimo arrivo
+                if (nextArrivo == 0) {
+                    nextArrivo = poisson(lambda);
+                    kGen--;
+                    kRif++;
+                }
+
+                sommaK += k;
+
+        }
+
+        eK = (double)sommaK/NRIP;
+        fprintf(fp, "%f\t%f\n", lambda/mu, eK);    // stampo i valori istantanei di A e E{K}
+
     }
 
+    printf("Pacchetti scartati: %d\n", kRif);
     fclose(fp);
 
     return 0;
