@@ -20,7 +20,7 @@
 int main(int argc, char* argv[]) {
 
     // Variabili
-    int ii;// t;              // Iteratori
+    int ii, t;              // Iteratori
     int kGen = 1000;        // Pacchetti che verranno generati nel corso della simulazione
     int k = 0;              // Numero pacchetti nel sistema
     int kRif = 0;           // Pacchetti rifiutati dal sistema
@@ -63,7 +63,9 @@ int main(int argc, char* argv[]) {
     for (lambda = 0.001; lambda < 0.2; lambda += 0.001) {
 
         sommaK = 0;
-        kGen = 1000;
+        kGen = 100;
+        kRif = 0;
+        t = 0;  // per quanti cicli va la sim
         while (kGen) {
 
                 /* Decremento di tutti i contatori diversi da 0 */
@@ -128,15 +130,16 @@ int main(int argc, char* argv[]) {
                 }
 
                 sommaK += k;
+                t++;
 
         }
 
-        eK = (double)sommaK/NRIP;
+        eK = (double)sommaK/(double)t;
         fprintf(fp, "%f\t%f\n", lambda/mu, eK);    // stampo i valori istantanei di A e E{K}
 
     }
 
-    printf("Pacchetti scartati: %d\n", kRif);
+    //printf("Pacchetti scartati: %d\n", kRif);
     fclose(fp);
 
     return 0;
