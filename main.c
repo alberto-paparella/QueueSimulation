@@ -11,8 +11,8 @@
 #include "poisgen.h"
 
 //----- MACROS --------------------------------------------------------------
-#define Y 4         // numero servitori
-#define PKTGEN 250  // pacchetti generati a ogni sperimentazione
+#define Y 20         // Numero servitori
+#define PKTGEN 800  // Pacchetti generati a ogni sperimentazione
 #define SEED 5647   // Seme per la generazione di numeri pseudo-casuali
                     // e per la ripetibilita' dell'esperimento
 
@@ -21,14 +21,16 @@ int main(int argc, char* argv[]) {
 
     // Variabili
     int ii, t;              // Iteratori
-    int kGen = PKTGEN;        // Pacchetti che verranno generati nel corso della simulazione
+    int kGen = PKTGEN;      // Pacchetti che verranno generati nel corso della simulazione
     int k = 0;              // Numero pacchetti nel sistema
     int kRif = 0;           // Pacchetti rifiutati dal sistema
     int nextArrivo = 0;     // Fra quanto tempo arrivera' il prossimo pacchetto
     int sommaK = 0;         // Utile per exp
     int sommaKcoda = 0;
+    int sommaTservizio = 0;
     double eK = 0.0;        // Utile per exp
     double eKq = 0.0;
+    double eT = 0.0;
     double lambda;          // Tasso di nascita
     double mu;              // Tasso di morte
     double lmbk, muk;       // Parametri istantanei di lambda e mu
@@ -60,15 +62,18 @@ int main(int argc, char* argv[]) {
 
     fprintf(fp, "Andamento di E{K} in funzione di A\nY = %d\tPacchetti Generati: %d\nA\t\tE{K}\n", Y, PKTGEN);
 
+    printf("Y = %d\tSEED = %d\tPacchetti generati per simulazione = %d\n", Y, SEED, PKTGEN);
+
     //lambda = 0.1; // Per il DEBUG commentando il ciclo
     mu = 0.01;
-    for (lambda = 0.0025; lambda < 0.2001; lambda += 0.0025) {
+    for (lambda = 0.0025; lambda < 0.2; lambda += 0.0025) {
 
         sommaK = 0;
         sommaKcoda = 0;
+        sommaTservizio = 0;
         kGen = PKTGEN;
         kRif = 0;
-        t = 0;  // per quanti cicli va la sim
+        t = 0;  // per quanti cicli va la simulazione
         while (kGen) {
 
                 /* Decremento di tutti i contatori diversi da 0 */
@@ -118,8 +123,9 @@ int main(int argc, char* argv[]) {
                         servitori[ii].pacchetto.id = c1->pacchetto.id;  // Copio l'indirizzo del pacchetto in testa alla coda
                                                                         // nel servitore; S ora sta servendo quel pkt
                         servitori[ii].Occupato = 1;
-                        muk = k * mu;   // nb: muk e' a livello di sistema, non la uso nella simulazione
+                        //muk = k * mu;   // nb: muk e' a livello di sistema, non la uso nella simulazione
                         servitori[ii].tServizio = poisson(mu);
+                        sommaTservizio += servitori[ii].tServizio;
                         dequeue(&c1);    // ATTENZIONE: in realta' prima viene effettuata la dequeue e poi il pacchetto
                                         // entra nel servitore, ovviamente. Cio' e' invertito per semplificare
                                         // l'implementazione della simulazione
@@ -142,8 +148,9 @@ int main(int argc, char* argv[]) {
 
         eK = (double)sommaK / (double)t;
         eKq = (double)sommaKcoda / (double)t;
+        eT = (double)sommaTservizio / (double)(PKTGEN-kRif);
         fprintf(fp, "%f\t%f\n", lambda/mu, eK);    // stampo i valori istantanei di A e E{K}
-        printf("A: %f\tE{K}: %f\tE{Kq}: %f\tPKT scartati: %d\n", lambda/mu, eK, eKq, kRif);
+        printf("A: %f\tE{K}: %f\tE{Kq}: %f\tPKT scartati: %d\tE{T}: %f\n", lambda/mu, eK, eKq, kRif, eT);
     }
 
     fclose(fp);
