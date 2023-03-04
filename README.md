@@ -1,6 +1,8 @@
 # Queue Simulation
 
-## SIMULAZIONE DI UN SISTEMA A CODA M/M/Y/Y
+Design of a M/M/Y/Y queue simulation. The project has been developed using C language. Documentation is at the moment of writing only written in Italian, as well as in code comments, as it was developed during the second year of a Bachelor Degree in Italian.
+
+## SIMULAZIONE DI UN SISTEMA A CODA M/M/Y/Y (IT)
 
 Progetto di un Sistema a Coda M/M/Y/Y per il corso di Reti di Telecomunicazioni tenuto dal professor Andrea Conti, Corso di Laurea Triennale in Informatica, A.A. 2019 - 2020.
 
@@ -9,16 +11,16 @@ Mebri del gruppo: Martina Tenani, Alberto Paparella.
 
 Il progetto e' stato sviluppato in piu' files per migliorarne la leggibilita', sia in fase di lavoro e di debugging che per la lettura di terzi, nonche' per assicurarne un miglior riutilizzo.
 
-## Overview e scelte implementative
+### Overview e scelte implementative
 
 E' stato scelto di utilizzare come struttura dati per l'implementazione della coda una Lista Collegata, ottima per la simulazione di una coda virtualmente "infinita" (seppur non necessaria nel sistema in questione, essendo almeno teoricamente sempre vuota, ma con occhio al riutilizzo per la simulazione ad altri sistemi) grazie all'allocazione dinamica della memoria, non necessitando di una dichiarazione a posteriori della capacita'. Le operazioni svolte su di essa sono quelle classiche di enqueue (inserimento in coda) e dequeue (eliminazione in testa). Oltre a queste, in funzione della simulazione e del debugging, vengono aggiungte una funzione per la stampa del numero di elementi presenti nella coda o eventualmente degli id degli stessi pacchetti in coda.
 Un miglioramento potrebbe essere tener conto dell'indirizzo dell'ultimo elemento in coda, la cosiddetta "tail" della coda. Viene comunque inserita una funzione per il calcolo di questo indirizzo, seppur non sfruttata nella simulazione.
 
-## Generazione degli arrivi
+### Generazione degli arrivi
 
 La generazione dei tempi di interarrivo e di intersevizio (numeri pseudo-casuali) sfrutta la tecnica di trasformazione inversa, ricavando dalla formula di densita' di probabilita' dei processi markoviani 1 - e^(-f(t)) la seguente formula: t = -(1/lambda)*log(1-u) dove per log si intende il logaritmo naturale e per u una variabile aleatoria distribuita uniformemente fra 0 e 1. Ovviamente, per il calcolo dei tempi di interservizio basti invertire lambda con mu. A questo calcolo viene infine sommato 1 per evitare di generare il valore 0 (testato sperimentalmente, il cambiamento che questo comporta e' trascurabile).
 
-## Descrizione dei files
+### Descrizione dei files
 
 - pacchetto.h: viene definita una struttura dati Pacchetto il cui unico campo non e' altro che un intero contenente l'id del pacchetto.
 
@@ -43,11 +45,11 @@ La generazione dei tempi di interarrivo e di intersevizio (numeri pseudo-casuali
 
 - main.c: il cliente della simulazione.
 
-## Funzionamento di enqueue
+### Funzionamento di enqueue
 
 L'operazione di enqueue, o di inserimento in coda, sfrutta la ricerca sulla coda dell'ultimo elemento della coda (quello che nel campo next contiene un puntatore a NULL), crea un nuovo Nodo ausiliario che conterra' il nuovo pacchetto e avra' nel campo next un puntatore a NULL, e l'indirizzo del pacchetto ausiliario verra' sostituito a quello nel campo next dell'ultimo pacchetto della coda, che conteneva un puntatore a NULL.
 
-## Risultati sperimentali
+### Risultati sperimentali
 
 Misurazione del parametro E{k} (stato del sistema) al variare del numero di servitori. Le misurazioni sono state effettuate per valori di λ che variano tra 0.001 e 0.2, con un incremento di
 0.001. Il tasso di morte μ è rimasto fisso a 0.01 per tutta la durata dell’esperimento.
