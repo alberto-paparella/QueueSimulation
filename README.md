@@ -22,28 +22,28 @@ La generazione dei tempi di interarrivo e di intersevizio (numeri pseudo-casuali
 
 ### Descrizione dei files
 
-- pacchetto.h: viene definita una struttura dati Pacchetto il cui unico campo non e' altro che un intero contenente l'id del pacchetto.
+- **pacchetto.h**: viene definita una struttura dati Pacchetto il cui unico campo non e' altro che un intero contenente l'id del pacchetto.
 
-- servitore.h: viene definita una struttura dati Servitore di campi pacchetto di tipo post-definito Pacchetto, utile per conoscere l'ID del pacchetto che sta venendo servito, una campo Occupato che funge da valore booleano per conoscere se il servitore sta servendo un pacchetto (1) o meno (0), e un campo tServizio di tipo intero che indica fra quanti cicli il servitore tornera' ad essere libero.
+- **servitore.h**: viene definita una struttura dati Servitore di campi pacchetto di tipo post-definito Pacchetto, utile per conoscere l'ID del pacchetto che sta venendo servito, una campo Occupato che funge da valore booleano per conoscere se il servitore sta servendo un pacchetto (1) o meno (0), e un campo tServizio di tipo intero che indica fra quanti cicli il servitore tornera' ad essere libero.
 
-- coda.h: viene definita la struttura dati della Coda (sfruttando in realta' le conoscenze sulle Liste Collegate e la loro implementazione in C) puntatore a Nodo, quest'ultimo definito con come campi un pacchetto di tipo definito Pacchetto e un campo next puntatore al nodo successivo (l'indirizzo a cui si trova l'elemento successivo della coda). In pratica, sfruttando l'allocazione dinamica della memoria del C, cosa che torna molto utile nella definizione delle funzioni che operano sulla coda. Sono inoltre definite le interfaccie per le funzioni che operano sulla coda visibili al cliente, in particolare:
-  - nuovaCoda(Coda* pc) prende come argomento un puntatore a coda e serve ad inizializzare la coda
-  - enqueue(Coda*pc, Pacchetto p) prende come argomenti un puntatore a coda e un pacchetto ed effettua l'inserimento in coda del pacchetto
-  - dequeue(Coda* pc) prende come argomento un puntatore a coda ed effettua l'eliminazione del pacchetto in testa alla coda
-  - getHead(Coda c) prende come argomento una coda e ne stampa il pacchetto in testa
-  - getTail(Coda c) prende come argomento una coda e ne stampa l'ultimo pacchetto entrato nella coda
-  - getStato(Coda c) prende come argomento una coda e restituisce il numero di elementi presenti nella coda, di tipo intero
-  - stampaCoda(Coda c) prende come argomento una coda e stampa gli id dei pacchetti in coda, nell'ordine dal prossimo che verra' servito fino all'ultimo pacchetto entrato in coda (a livello grafico a specchio rispetto ad una rappresentazione canone di coda)
+- **coda.h**: viene definita la struttura dati della Coda (sfruttando in realta' le conoscenze sulle Liste Collegate e la loro implementazione in C) puntatore a Nodo, quest'ultimo definito con come campi un pacchetto di tipo definito Pacchetto e un campo next puntatore al nodo successivo (l'indirizzo a cui si trova l'elemento successivo della coda). In pratica, sfruttando l'allocazione dinamica della memoria del C, cosa che torna molto utile nella definizione delle funzioni che operano sulla coda. Sono inoltre definite le interfaccie per le funzioni che operano sulla coda visibili al cliente, in particolare:
+  - **nuovaCoda(Coda\* pc)** prende come argomento un puntatore a coda e serve ad inizializzare la coda
+  - **enqueue(Coda*pc, Pacchetto p)** prende come argomenti un puntatore a coda e un pacchetto ed effettua l'inserimento in coda del pacchetto
+  - **dequeue(Coda\* pc)** prende come argomento un puntatore a coda ed effettua l'eliminazione del pacchetto in testa alla coda
+  - **getHead(Coda c)** prende come argomento una coda e ne stampa il pacchetto in testa
+  - **getTail(Coda c)** prende come argomento una coda e ne stampa l'ultimo pacchetto entrato nella coda
+  - **getStato(Coda c)** prende come argomento una coda e restituisce il numero di elementi presenti nella coda, di tipo intero
+  - **stampaCoda(Coda c)** prende come argomento una coda e stampa gli id dei pacchetti in coda, nell'ordine dal prossimo che verra' servito fino all'ultimo pacchetto entrato in coda (a livello grafico a specchio rispetto ad una rappresentazione canone di coda)
 
-- coda.c: contiene l'implementazione delle funzioni che operano sulla coda. Si evidenzia la presenza di due funzioni, insTesta e ricerca, nascoste al cliente in quanto vengono solo sfruttate nell'implementazione di altre funzioni (l'operazione di enqueue). In particolare:
-  - insTesta(Coda* pc, Pacchetto pacchetto) che prende come argomenti un puntatore a coda e un pacchetto, ed effettua l'inserimento in testa di un pacchetto nella coda (trattandosi di una lista collegata, l'inserimento in testa al nodo della coda)
-  - ricerca(Coda* pc, pacchetto p) che prende come argomenti un puntatore a coda e un pacchetto e scorre gli elementi della coda sino a che non ne trova uno che punti a NULL (l'ultimo elemento, quello attualmente in "coda alla coda").
+- **coda.c**: contiene l'implementazione delle funzioni che operano sulla coda. Si evidenzia la presenza di due funzioni, insTesta e ricerca, nascoste al cliente in quanto vengono solo sfruttate nell'implementazione di altre funzioni (l'operazione di enqueue). In particolare:
+  - **insTesta(Coda\* pc, Pacchetto pacchetto)** che prende come argomenti un puntatore a coda e un pacchetto, ed effettua l'inserimento in testa di un pacchetto nella coda (trattandosi di una lista collegata, l'inserimento in testa al nodo della coda)
+  - **ricerca(Coda\* pc, pacchetto p)** che prende come argomenti un puntatore a coda e un pacchetto e scorre gli elementi della coda sino a che non ne trova uno che punti a NULL (l'ultimo elemento, quello attualmente in "coda alla coda").
 
-- poisgen.h: contiene semplicemente il prototipo della funzione per la generazione di numeri pseudo-casuali da una legge di distribuzione poissoniana con parameotro x (sia esso lmabda o mu).
+- **poisgen.h**: contiene semplicemente il prototipo della funzione per la generazione di numeri pseudo-casuali da una legge di distribuzione poissoniana con parameotro x (sia esso lmabda o mu).
 
-- poisgen.c: contiene l'implementazione della funzione per la generazione di numeri pseudo-casuali che seguono la legge poissoniana (sfruttati come tempi di interarrivo e interservizio).
+- **poisgen.c**: contiene l'implementazione della funzione per la generazione di numeri pseudo-casuali che seguono la legge poissoniana (sfruttati come tempi di interarrivo e interservizio).
 
-- main.c: il cliente della simulazione.
+- **main.c**: il cliente della simulazione.
 
 ### Funzionamento di enqueue
 
