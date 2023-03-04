@@ -51,3 +51,5 @@ L'operazione di enqueue, o di inserimento in coda, sfrutta la ricerca sulla coda
 
 Misurazione del parametro E{k} (stato del sistema) al variare del numero di servitori. Le misurazioni sono state effettuate per valori di λ che variano tra 0.001 e 0.2, con un incremento di
 0.001. Il tasso di morte μ è rimasto fisso a 0.01 per tutta la durata dell’esperimento.
+
+![results](https://github.com/alberto-paparella/QueueSimulation/blob/master/images/results.png?raw=true)
